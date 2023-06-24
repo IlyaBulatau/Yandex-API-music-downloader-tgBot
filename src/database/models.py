@@ -14,6 +14,10 @@ class User(Base):
     coins = orm.Column(orm.BigInteger(), nullable=True, default=0)
 
     async def save(self):
+        """
+        Сохраняет новый обьект юзера в БД
+        """
+        # открывает соединение(сессию)
         async with session() as s:
             try:
                 s.add(self)
@@ -25,8 +29,17 @@ class User(Base):
 
     @classmethod
     async def get_coins(cls, tg_id):
+        """
+        Принимает ИД юзера
+
+        Возвращает количество монет юзера
+        """
+        # формирует SQL запрос
         query = select(cls.coins).filter(cls.tg_id == tg_id)
+        # открывает сессию
         async with session() as s:
+            # выполняет сформированный запрос
             res = await s.execute(query)
+            # достает нужный результат из запроса
             user = res.scalars().first()
             return user

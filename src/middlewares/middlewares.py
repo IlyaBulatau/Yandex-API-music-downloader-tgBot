@@ -14,9 +14,12 @@ class AddNewUserMiddleware(BaseMiddleware):
                 event: Message | CallbackQuery,
                 data: Dict[str, Any]):
         
+        # утсановка флага для метки на хендлерах
         track_new_user_flag = get_flag(handler=data, name='flag_new_user')
 
-        if track_new_user_flag:   
+        # если хендлер помечен флагом
+        if track_new_user_flag:
+            # добавляет юзера в базу данных   
             await User(tg_id=event.from_user.id, username=event.from_user.username).save()
         
         return await handler(event, data)

@@ -13,7 +13,9 @@ router.message.middleware(AddNewUserMiddleware())
 
 @router.message(Command(commands=['start']), flags={'flag_n ew_user': 'flag_new_user'})
 async def process_command_start(message: Message, state: FSMContext):
+    # получить кэш состояний
     get_state = await state.get_state()
+    # если кэш не пустой то очищает его    
     if get_state != None:
         state.clear()
 
@@ -21,5 +23,8 @@ async def process_command_start(message: Message, state: FSMContext):
 
 @router.message(Command(commands=['coins']))
 async def process_command_coins(message: Message):
+    """
+    Для работы с монетами пользователя
+    """
     text = await User.get_coins(tg_id=message.from_user.id)
     await message.answer(text=str(text))
