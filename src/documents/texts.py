@@ -1,5 +1,5 @@
 COMMANDS = {
-    'start': 'Start typing the name of the song'
+    'start': 'Hello'
 }
 
 CALLBACK = {
