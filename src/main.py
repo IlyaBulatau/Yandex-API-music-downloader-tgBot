@@ -6,6 +6,7 @@ import asyncio
 from handlers.commands import router as router_commands
 
 from documents.menu import set_commands_menu
+from database.create_db import db
 
 async def main():
 
@@ -13,8 +14,9 @@ async def main():
     ds = Dispatcher()
 
     ds.include_routers(router_commands,)
-
-    await bot.set_my_commands(set_commands_menu())
+    
+    await db.create_db()
+    await bot(set_commands_menu())
     await ds.start_polling(bot)
 
 
