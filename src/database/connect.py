@@ -36,4 +36,4 @@ class Database:
     
 
 db = Database()
-session = db.session()()
+session = db.session()
