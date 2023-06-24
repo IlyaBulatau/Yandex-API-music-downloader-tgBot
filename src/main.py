@@ -1,12 +1,12 @@
 from aiogram import Bot, Dispatcher
-
-from config import config
 import asyncio
 
 from handlers.commands import router as router_commands
 
 from documents.menu import set_commands_menu
 from database.create_db import db
+from config import config
+from logger.logger import logger
 
 async def main():
 
@@ -21,4 +21,5 @@ async def main():
 
 
 if __name__ == "__main__":
+    logger.warning('START BOT')
     asyncio.run(main())

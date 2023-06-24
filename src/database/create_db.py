@@ -1,7 +1,7 @@
 import asyncpg
 
 from config import config
-
+from logger.logger import logger
 
 class Database:
     
@@ -10,9 +10,10 @@ class Database:
 
         try:
             await connect.execute(f'CREATE DATABASE {config.DB_NAME}')
+            logger.warning('CREATE DATABASE')
         except Exception as e:
-            ...
-            
+            logger.warning(f'EXEPTION - DATABASE {e}')
+
         await connect.close()
 
 db = Database()
