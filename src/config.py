@@ -16,8 +16,8 @@ class DevelopmentConfig(BaseConfig):
     DB_LOGIN = BaseConfig.env('DB_LOGIN_DEV')
     DB_PASSWORD = BaseConfig.env('DB_PASSWORD_DEV')
     DB_HOST = BaseConfig.env('DB_HOST_DEV')
-    DB_URL = f'postgres+asyncpg://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
-
+    DB_URL = f'postgresql+asyncpg://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
+            
     EMAIL = BaseConfig.env('EMAIL')
     EMAIL_PASSWORD = BaseConfig.env('EMAIL_PASSWORD')
 

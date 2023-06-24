@@ -4,7 +4,8 @@ import asyncio
 from handlers.commands import router as router_commands
 
 from documents.menu import set_commands_menu
-from database.create_db import db
+from database.connect import db
+from database.models import User, Base
 from config import config
 from logger.logger import logger
 
@@ -16,6 +17,8 @@ async def main():
     ds.include_routers(router_commands,)
     
     await db.create_db()
+    await db.create_models(Base.metadata)
+
     await bot(set_commands_menu())
     await ds.start_polling(bot)
 
