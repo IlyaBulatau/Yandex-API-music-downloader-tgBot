@@ -45,19 +45,21 @@ class MusicApi:
 
         id = track.id
         title = track.title
+        photo = track.get_cover_url()
         duration = track.duration_ms/1000%60
         image = track.get_cover_url()
         artist = track.artists[0].name
-        audio = await track.get_download_info(get_direct_links=True)
-        audio = await audio[0].getDirectLinkAsync()
+        # audio = await track.get_download_info(get_direct_links=True)
+        # audio = await audio[0].getDirectLinkAsync()
 
         return {
             'id': id,
             'title': title,
+            'photo': photo,
             'duration': duration,
             'image': image,
             'artist': artist,
-            'audio': audio,
+            # 'audio': audio,
         }
         
 

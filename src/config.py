@@ -23,6 +23,8 @@ class DevelopmentConfig(BaseConfig):
     EMAIL = BaseConfig.env('EMAIL')
     EMAIL_PASSWORD = BaseConfig.env('EMAIL_PASSWORD')
 
+    REDIS_HOST = BaseConfig.env('REDIS_HOST_DEV')
+
 class ProductConfig(BaseConfig):
     ...
 

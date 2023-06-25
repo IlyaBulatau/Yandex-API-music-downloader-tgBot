@@ -1,4 +1,5 @@
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
 import asyncio
 
 from handlers.commands import router as router_commands
@@ -11,12 +12,13 @@ from database.models import User, Base
 from config import config
 from logger.logger import logger
 from services.music_api import music_api
-
+from fsm.cache import redis
 
 async def main():
 
     bot = Bot(token=config.BOT_TOKEN)
-    ds = Dispatcher()
+    storage = RedisStorage(redis=redis)
+    ds = Dispatcher(storage=storage)
 
     ds.include_routers(router_commands,
                        router_callbacks,
