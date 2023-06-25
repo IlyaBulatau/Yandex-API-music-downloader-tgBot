@@ -11,48 +11,54 @@ class MusicApi:
         if not request_search:
             return
 
-        result = await self.client.search(request_search)
+        search = await self.client.search(request_search)
 
-        track = result.best.result
+        type_search = search.best.type
+
+        if type_search == 'track':
+            result = []
+
+            track = search.best.result
+
+            convert = await self.conver_to_list_dicts(track)
+            result.append(convert)
+
+            return result
+
+
+        elif type_search == 'artist':
+            result = []
+
+            artist = search.best.result
+            tracks = await artist.getTracksAsync()
+
+            for track in tracks:
+                convert = await self.conver_to_list_dicts(track)
+                result.append(convert)
+            
+            return result
+
+
+    
+    @staticmethod
+    async def conver_to_list_dicts(track):
 
         id = track.id
-        # title = track.title
+        title = track.title
         duration = track.duration_ms/1000%60
         image = track.get_cover_url()
         artist = track.artists[0].name
         audio = await track.get_download_info(get_direct_links=True)
         audio = await audio[0].getDirectLinkAsync()
 
-
-
         return {
             'id': id,
-            # 'title': title,
+            'title': title,
             'duration': duration,
             'image': image,
             'artist': artist,
             'audio': audio,
         }
-    
-    @staticmethod
-    async def conver_to_list_dicts(tracks):
-        responce = []
-        for track in tracks:
-
-            # остает юрл трека
-            audio = await track.client.tracksDownloadInfo(track.id, get_direct_links=True)
-            audio = await audio[0].getDirectLinkAsync()
-
-            responce.append({
-                'id': track.id,
-                'title': track.title,
-                'audio': audio,
-                'duration': track.duration_ms/1000%60,
-                'image': track.get_cover_url(),
-                'artist': track.artists_name()
-            })
-
-        return responce
         
 
 music_api = MusicApi()

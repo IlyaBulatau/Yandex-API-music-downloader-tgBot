@@ -9,29 +9,22 @@ router = Router()
 @router.inline_query()
 async def process_inline(inline:InlineQuery):
 
-    responce = await music_api.get_responce(inline.query)
-    if not responce:
+    responces = await music_api.get_responce(inline.query)
+    if not responces:
         return
     
     result = []
 
-    # for resp in responce:
-    #     result.append(InlineQueryResultArticle(
-    #         id=resp['id'],
-    #         reply_markup=inline_kb(resp),
-    #         title=resp['title'],
-    #         input_message_content=InputTextMessageContent(message_text='l'),
-    #     ))
-
-    result.append(InlineQueryResultAudio(
-        type='audio',
-        id=responce['id'],
-        audio_url=responce['audio'],
-        title='Title',
-        audio_duration=responce['duration'],
-        reply_markup=inline_kb(responce),
-        input_message_content=InputTextMessageContent(message_text='Download')
-    ))
+    for responce in responces:
+        result.append(InlineQueryResultAudio(
+            type='audio',
+            id=responce['id'],
+            title=responce['title']+', '+responce['artist'],
+            audio_url=responce['audio'],
+            audio_duration=responce['duration'],
+            reply_markup=inline_kb(responce),
+            input_message_content=InputTextMessageContent(message_text='Download')
+        ))
 
 
     await inline.answer(results=result, is_personal=True)
