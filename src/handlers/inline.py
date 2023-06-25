@@ -11,6 +11,13 @@ router = Router()
 
 @router.inline_query()
 async def process_inline(inline: InlineQuery, state: FSMContext):
+    """
+    Реагирует на упаминания бота в инлайн режиме
+
+    Ищет и отображает треки по введенному тексту
+
+    Устанавливает состояия ожидания получения ИД трека посел клика юзера по треку
+    """
 
     responces = await music_api.get_responce(inline.query)
     if not responces:
@@ -35,6 +42,13 @@ async def process_inline(inline: InlineQuery, state: FSMContext):
     
 @router.message(MusicState.id)
 async def test(message: Message, state: FSMContext, bot: Bot):
+    """
+    Отрабатывает после того как юзер выбрал трек
+    Удаляет сообщение с номером трека и запоминает ИД трека
+
+    Ищет трек по ИД и отдает результат для скачивания
+    """
+
     await message.delete()
     await state.update_data(id=message.text)
 

@@ -8,6 +8,9 @@ from database.models import User
 
 
 class AddNewUserMiddleware(BaseMiddleware):
+    """
+    Отслеживает добавление нового юзера
+    """
 
     async def __call__(sellf,
                 handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
