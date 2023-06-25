@@ -49,8 +49,6 @@ class MusicApi:
         duration = track.duration_ms/1000%60
         image = track.get_cover_url()
         artist = track.artists[0].name
-        # audio = await track.get_download_info(get_direct_links=True)
-        # audio = await audio[0].getDirectLinkAsync()
 
         return {
             'id': id,
@@ -59,9 +57,17 @@ class MusicApi:
             'duration': duration,
             'image': image,
             'artist': artist,
-            # 'audio': audio,
         }
         
+
+    async def get_music_by_id(self, id):
+        track = await self.client.tracks([id])
+        track = track[0]
+
+        download_url = await track.get_download_info(get_direct_links=True)
+        download_url = await download_url[0].getDirectLinkAsync()
+
+        return download_url
 
 music_api = MusicApi()
 

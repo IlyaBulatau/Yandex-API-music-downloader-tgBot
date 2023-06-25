@@ -1,5 +1,5 @@
-from aiogram import Router
-from aiogram.types import InlineQuery,InlineQueryResultAudio, InlineQueryResultArticle, InputTextMessageContent, Message
+from aiogram import Router, Bot
+from aiogram.types import InlineQuery,InlineQueryResultAudio, InlineQueryResultArticle, InputTextMessageContent, Message, InputMediaAudio
 from aiogram.methods import AnswerInlineQuery
 from aiogram.fsm.context import FSMContext
 
@@ -19,16 +19,6 @@ async def process_inline(inline: InlineQuery, state: FSMContext):
     result = []
 
     for responce in responces:
-        # result.append(InlineQueryResultAudio(
-        #     type='audio',
-        #     id=responce['id'],
-        #     title=responce['title']+', '+responce['artist'],
-        #     audio_url=responce['audio'],
-        #     audio_duration=responce['duration'],
-        #     reply_markup=inline_kb(responce),
-        #     input_message_content=InputTextMessageContent(message_text='Download')
-        # ))
-
         result.append(
             InlineQueryResultArticle(
             id=str(responce['id']),
@@ -44,12 +34,15 @@ async def process_inline(inline: InlineQuery, state: FSMContext):
 
     
 @router.message(MusicState.id)
-async def test(message: Message, state: FSMContext):
+async def test(message: Message, state: FSMContext, bot: Bot):
     await message.delete()
     await state.update_data(id=message.text)
 
     data = await state.get_data()
     id = data.get('id')
 
+    music = await music_api.get_music_by_id(id)
+    
     await state.clear()
-    await message.answer(text=id)
+    
+    await bot.send_audio(chat_id=message.chat.id, audio=music)
