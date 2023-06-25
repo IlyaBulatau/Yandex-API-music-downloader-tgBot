@@ -1,6 +1,7 @@
 from aiogram import Router
-from aiogram.types import InlineQuery,InlineQueryResultAudio, InlineQueryResultCachedAudio, InlineQueryResultArticle, InputMediaAudio, InputTextMessageContent, InlineQueryResultPhoto
+from aiogram.types import InlineQuery,InlineQueryResultAudio, InlineQueryResultArticle, InputMediaAudio, InputTextMessageContent, InlineQueryResultPhoto, InputMessageContent
 from services.music_api import music_api
+from keyboards.keyboards import inline_kb
 
 router = Router()
 
@@ -13,13 +14,25 @@ async def process_inline(inline:InlineQuery):
         return
     
     result = []
-    for resp in responce:
-        result.append(InlineQueryResultArticle(
-            id=resp['id'],
-            url=resp['image'],
-            title=resp['title'],
-            input_message_content=InputTextMessageContent(message_text='l'),
-        ))
+
+    # for resp in responce:
+    #     result.append(InlineQueryResultArticle(
+    #         id=resp['id'],
+    #         reply_markup=inline_kb(resp),
+    #         title=resp['title'],
+    #         input_message_content=InputTextMessageContent(message_text='l'),
+    #     ))
+
+    result.append(InlineQueryResultAudio(
+        type='audio',
+        id=responce['id'],
+        audio_url=responce['audio'],
+        title='Title',
+        audio_duration=responce['duration'],
+        reply_markup=inline_kb(responce),
+        input_message_content=InputTextMessageContent(message_text='Download')
+    ))
+
 
     await inline.answer(results=result, is_personal=True)
 

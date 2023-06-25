@@ -12,3 +12,13 @@ def create_kb():
     kb.row(*buttons, width=1)
 
     return kb.as_markup()
+
+
+def inline_kb(data):
+
+    kb = InlineKeyboardBuilder()
+
+    buttons = [InlineKeyboardButton(text='Download', callback_data='d')]
+    kb.row(*buttons, width=1)
+
+    return kb.as_markup()
