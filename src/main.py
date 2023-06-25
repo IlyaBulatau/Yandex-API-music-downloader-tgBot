@@ -21,7 +21,7 @@ async def main():
     ds.include_routers(router_commands,
                        router_callbacks,
                        router_inline)
-    
+
     await db.create_db()
     await db.create_models(Base.metadata)
 

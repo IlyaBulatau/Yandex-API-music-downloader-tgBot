@@ -22,8 +22,3 @@ async def process_command_start(message: Message, state: FSMContext):
 
     await message.answer(text=COMMANDS['start'], reply_markup=create_kb())
 
-
-@router.message()
-async def echo(message: Message):
-    r = await music_api.get_responce(message.text)
-    await message.answer(text=str(r))

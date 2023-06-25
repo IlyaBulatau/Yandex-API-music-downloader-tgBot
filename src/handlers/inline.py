@@ -1,14 +1,26 @@
 from aiogram import Router
-from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineQueryResultAudio
-
+from aiogram.types import InlineQuery,InlineQueryResultAudio, InlineQueryResultCachedAudio, InlineQueryResultArticle, InputMediaAudio, InputTextMessageContent, InlineQueryResultPhoto
+from services.music_api import music_api
 
 router = Router()
 
 
 @router.inline_query()
 async def process_inline(inline:InlineQuery):
-    await inline.answer(results=[
-        InlineQueryResultArticle(id=1, title='A', input_message_content=InputTextMessageContent(message_text='A')),
-        InlineQueryResultArticle(id=2, title='B', input_message_content=InputTextMessageContent(message_text='B')),
-        InlineQueryResultArticle(id=3, title='C', input_message_content=InputTextMessageContent(message_text='C'))
-    ], is_personal=True)
+
+    responce = await music_api.get_responce(inline.query)
+    if not responce:
+        return
+    
+    result = []
+    for resp in responce:
+        result.append(InlineQueryResultArticle(
+            id=resp['id'],
+            url=resp['image'],
+            title=resp['title'],
+            input_message_content=InputTextMessageContent(message_text='l'),
+        ))
+
+    await inline.answer(results=result, is_personal=True)
+
+    
