@@ -6,6 +6,8 @@ from aiogram.fsm.context import FSMContext
 from documents.texts import COMMANDS
 from middlewares.middlewares import AddNewUserMiddleware
 from keyboards.keyboards import create_kb
+from services.music_api import music_api
+
 
 router = Router()
 router.message.middleware(AddNewUserMiddleware())
@@ -19,3 +21,9 @@ async def process_command_start(message: Message, state: FSMContext):
         state.clear()
 
     await message.answer(text=COMMANDS['start'], reply_markup=create_kb())
+
+
+@router.message()
+async def echo(message: Message):
+    r = await music_api.get_responce(message.text)
+    await message.answer(text=str(r))

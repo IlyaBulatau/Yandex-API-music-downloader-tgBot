@@ -8,7 +8,7 @@ class BaseConfig:
 
     BOT_TOKEN = env('BOT_TOKEN')
 
-    MUSIC_TOKEN = env('VK_TOKEN')
+    MUSIC_TOKEN = env('MUSIC_TOKEN')
 
     _status = 'dev'
 
