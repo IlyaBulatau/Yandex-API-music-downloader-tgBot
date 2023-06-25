@@ -85,10 +85,13 @@ class MusicApi:
         track = await self.client.tracks([id])
         track = track[0]
 
+        title = track.title
+        artist = track.artists[0].name
+
         download_url = await track.get_download_info(get_direct_links=True)
         download_url = await download_url[0].getDirectLinkAsync()
 
-        return download_url
+        return (download_url, title, artist)
 
 music_api = MusicApi()
 

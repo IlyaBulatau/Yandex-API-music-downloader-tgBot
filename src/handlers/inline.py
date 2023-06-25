@@ -1,13 +1,15 @@
 from aiogram import Router, Bot
-from aiogram.types import InlineQuery,InlineQueryResultAudio, InlineQueryResultArticle, InputTextMessageContent, Message, InputMediaAudio
+from aiogram.types import InlineQuery,InlineQueryResultAudio, InlineQueryResultArticle, InputTextMessageContent, Message, InputMediaAudio, URLInputFile
 from aiogram.methods import AnswerInlineQuery
 from aiogram.fsm.context import FSMContext
 
 from services.music_api import music_api
 from keyboards.keyboards import inline_kb
 from fsm.states import MusicState
+from middlewares.middlewares import LongOperationMiddleware
 
 router = Router()
+router.message.middleware(LongOperationMiddleware())
 
 @router.inline_query()
 async def process_inline(inline: InlineQuery, state: FSMContext):
@@ -40,7 +42,7 @@ async def process_inline(inline: InlineQuery, state: FSMContext):
     await inline.answer(results=result, is_personal=True)
 
     
-@router.message(MusicState.id)
+@router.message(MusicState.id, flags={'upload_document': 'upload_document'})
 async def test(message: Message, state: FSMContext, bot: Bot):
     """
     Отрабатывает после того как юзер выбрал трек
@@ -55,8 +57,8 @@ async def test(message: Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     id = data.get('id')
 
-    music = await music_api.get_music_by_id(id)
+    music, title, artist = await music_api.get_music_by_id(id)
     
     await state.clear()
     
-    await bot.send_audio(chat_id=message.chat.id, audio=music)
+    await bot.send_audio(chat_id=message.chat.id, audio=URLInputFile(url=music, filename=f'{title} - {artist}'))  
