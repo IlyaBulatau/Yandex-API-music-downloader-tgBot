@@ -8,8 +8,13 @@ class BaseConfig:
 
     BOT_TOKEN = env('BOT_TOKEN')
     ADMIN_ID = env('ADMIN_ID')
+    BOT_URL = env('BOT_URL')
 
     MUSIC_TOKEN = env('MUSIC_TOKEN')
+
+    YOOMONEY_CLIENT_ID = env('YOOMONEY_CLIENT_ID')
+    YOOMONEY_TOKEN = env('YOOMONEY_TOKEN')
+    YOOMONEY_ID = env('YOOMONEY_ID')
 
     _status = 'dev'
 

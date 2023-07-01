@@ -62,8 +62,8 @@ class LimitTrackDownloadInDayMiddleware(BaseMiddleware):
 
             flag = get_flag(handler=data, name='limit_download')
 
-            # if user_id == config.ADMIN_ID:
-            #     return await handler(event, data)
+            if user_id == config.ADMIN_ID:
+                return await handler(event, data)
 
             if flag:
                 count_user_coins = await User.get_coins(user_id)

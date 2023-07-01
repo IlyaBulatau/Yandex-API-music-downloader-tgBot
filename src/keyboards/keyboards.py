@@ -13,3 +13,14 @@ def create_kb():
 
     return kb.as_markup()
 
+def buy_coins_kb():
+    
+    kb = InlineKeyboardBuilder()
+
+    buttons = [
+        InlineKeyboardButton(text='Buy coins', callback_data=CALLBACK['buy_coins']),
+    ]
+
+    kb.row(*buttons)
+
+    return kb.as_markup()
