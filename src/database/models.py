@@ -3,6 +3,7 @@ import sqlalchemy as orm
 
 from logger.logger import logger
 from sqlalchemy.future import select
+from sqlalchemy import update
 
 
 class User(Base):
@@ -43,3 +44,14 @@ class User(Base):
             # достает нужный результат из запроса
             user = res.scalars().first()
             return user
+        
+    @classmethod    
+    async def downgrade_coins(cls, tg_id, **kwargs):
+        query = update(cls).where(cls.tg_id == tg_id).values(**kwargs).execution_options(synchronize_session='fetch')
+        async with session() as s:
+            try:
+                await s.execute(query)
+                await s.commit()
+            except Exception as e:
+                await s.rollback()
+                logger.critical(f'EXEPTION UPDATE COINS {e}')

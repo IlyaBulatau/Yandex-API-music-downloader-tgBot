@@ -4,11 +4,11 @@ from aiogram.methods import AnswerInlineQuery
 from aiogram.fsm.context import FSMContext
 
 from services.music_api import music_api
-from keyboards.keyboards import inline_kb
 from fsm.states import MusicState
-from middlewares.middlewares import LongOperationMiddleware
+from middlewares.middlewares import LongOperationMiddleware, LimitTrackDownloadInDayMiddleware
 
 router = Router()
+router.message.middleware(LimitTrackDownloadInDayMiddleware())
 router.message.middleware(LongOperationMiddleware())
 
 @router.inline_query()
@@ -45,8 +45,8 @@ async def process_inline(inline: InlineQuery, state: FSMContext):
 @router.message(lambda msg: msg.text.startswith('search_music_for_id_') and len(msg.text.split('_')[-1]) >= 8 and msg.text.split('_')[-1].isdigit(), # лямбда для более точнго определения
                 # что юзер именно выбрал трек а не просто ввел текст сообщением, так как клик по треку в инлайн режиме возвращает апдейт сообщение 
                 MusicState.id, 
-                flags={'upload_document': 'upload_document'})
-async def test(message: Message, state: FSMContext, bot: Bot):
+                flags={'limit_download': 'limit_download', 'upload_document': 'upload_document'})
+async def process_download_misuc(message: Message, state: FSMContext, bot: Bot):
     """
     Отрабатывает после того как юзер выбрал трек
     Удаляет сообщение с номером трека и запоминает ИД трека

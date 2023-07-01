@@ -6,6 +6,8 @@ from aiogram.types import TelegramObject, Message, CallbackQuery
 from aiogram.utils.chat_action import ChatActionSender
 
 from database.models import User
+from fsm.cache import downloader
+from config import config
 
 
 class AddNewUserMiddleware(BaseMiddleware):
@@ -47,3 +49,46 @@ class LongOperationMiddleware(BaseMiddleware):
 
 
         return await handler(event, data)
+
+
+class LimitTrackDownloadInDayMiddleware(BaseMiddleware):
+
+        async def __call__(sellf,
+                handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+                event: Message | CallbackQuery,
+                data: Dict[str, Any]):
+
+            user_id = event.from_user.id 
+
+            flag = get_flag(handler=data, name='limit_download')
+
+            # if user_id == config.ADMIN_ID:
+            #     return await handler(event, data)
+
+            if flag:
+                count_user_coins = await User.get_coins(user_id)
+                is_limit = await downloader.is_a_user_limit(user_id) 
+                if is_limit:
+                    
+
+                    if count_user_coins == 0:
+                        ttl_seconds = await downloader.get_user_ttl_time(user_id)
+                        house = ttl_seconds // 3600
+                        seconds_remainder = ttl_seconds - (house*3600)
+                        minutes = seconds_remainder // 60
+                        seconds = seconds_remainder - (minutes * 60)
+
+                        await event.delete()
+                        return await event.answer(text=f'Download limit for today is exhausted\n\nBuy coins or come back in {house-1} hours, {minutes} minutes, {seconds} seconds')
+                    
+                    else:
+                        await event.answer(text=f'You use 1 coin\nCoins left {count_user_coins-1}\n\nWait for the file to load')
+                        await User.downgrade_coins(user_id, coins=count_user_coins-1)
+                        return await handler(event, data)
+                    
+                else:
+                    await downloader.add_user_in_cache(user_id)
+                    if count_user_coins != 0:
+                        await event.answer(text='Attention free download limit for today is over, further selection of tracks will charge 1 coin')
+
+            return await handler(event, data)

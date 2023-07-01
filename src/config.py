@@ -7,6 +7,7 @@ class BaseConfig:
     env.read_env()
 
     BOT_TOKEN = env('BOT_TOKEN')
+    ADMIN_ID = env('ADMIN_ID')
 
     MUSIC_TOKEN = env('MUSIC_TOKEN')
 
