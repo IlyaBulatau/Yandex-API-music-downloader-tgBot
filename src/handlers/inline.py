@@ -32,7 +32,7 @@ async def process_inline(inline: InlineQuery, state: FSMContext):
             InlineQueryResultArticle(
             id=str(responce['id']),
             title=responce['title'],
-            input_message_content=InputTextMessageContent(message_text=responce['id']),
+            input_message_content=InputTextMessageContent(message_text='search_music_for_id_'+str(responce['id'])),
             thumb_url=responce['photo'],
             )
         )
@@ -42,7 +42,10 @@ async def process_inline(inline: InlineQuery, state: FSMContext):
     await inline.answer(results=result, is_personal=True)
 
     
-@router.message(MusicState.id, flags={'upload_document': 'upload_document'})
+@router.message(lambda msg: msg.text.startswith('search_music_for_id_') and len(msg.text.split('_')[-1]) >= 8 and msg.text.split('_')[-1].isdigit(), # лямбда для более точнго определения
+                # что юзер именно выбрал трек а не просто ввел текст сообщением, так как клик по треку в инлайн режиме возвращает апдейт сообщение 
+                MusicState.id, 
+                flags={'upload_document': 'upload_document'})
 async def test(message: Message, state: FSMContext, bot: Bot):
     """
     Отрабатывает после того как юзер выбрал трек
@@ -52,7 +55,7 @@ async def test(message: Message, state: FSMContext, bot: Bot):
     """
 
     await message.delete()
-    await state.update_data(id=message.text)
+    await state.update_data(id=message.text.split('_')[-1])
 
     data = await state.get_data()
     id = data.get('id')

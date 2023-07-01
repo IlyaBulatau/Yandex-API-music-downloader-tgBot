@@ -18,7 +18,7 @@ async def process_command_start(message: Message, state: FSMContext):
     get_state = await state.get_state()
     # если кэш не пустой то очищает его    
     if get_state != None:
-        state.clear()
+        await state.clear()
 
     await message.answer(text=COMMANDS['start'], reply_markup=create_kb())
 
