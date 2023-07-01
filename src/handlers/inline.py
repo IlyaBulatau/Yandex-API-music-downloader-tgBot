@@ -61,4 +61,5 @@ async def test(message: Message, state: FSMContext, bot: Bot):
     
     await state.clear()
     
-    await bot.send_audio(chat_id=message.chat.id, audio=URLInputFile(url=music, filename=f'{title} - {artist}'))  
+    await bot.send_audio(chat_id=message.chat.id, audio=URLInputFile(url=music), performer=artist, title=title, protect_content=True)  
+    
