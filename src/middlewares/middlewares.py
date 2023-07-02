@@ -95,7 +95,7 @@ class LimitTrackDownloadInDayMiddleware(BaseMiddleware):
                     
                     else:
                         await event.answer(text=f'You use 1 coin\nCoins left {count_user_coins-1}\n\nWait for the file to load')
-                        await User.downgrade_coins(user_id, coins=count_user_coins-1)
+                        await User.update_coins(user_id, coins=count_user_coins-1)
                         return await handler(event, data)
                     
                 else:
