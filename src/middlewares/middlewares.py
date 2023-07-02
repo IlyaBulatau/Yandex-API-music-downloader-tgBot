@@ -91,16 +91,16 @@ class LimitTrackDownloadInDayMiddleware(BaseMiddleware):
                         seconds = seconds_remainder - (minutes * 60)
 
                         await event.delete()
-                        return await event.answer(text=f'Download limit for today is exhausted\n\nBuy coins or come back in {house-1} hours, {minutes} minutes, {seconds} seconds')
+                        return await event.answer(text=f'🔔 Download limit for today is exhausted\n\n💳 Buy coins or come back in {house-1} hours, {minutes} minutes, {seconds} seconds')
                     
                     else:
-                        await event.answer(text=f'You use 1 coin\nCoins left {count_user_coins-1}\n\nWait for the file to load')
+                        await event.answer(text=f'✅ You use 1 coin\n📋 Coins left {count_user_coins-1}\n\n⌛ Wait for the file to load')
                         await User.update_coins(user_id, coins=count_user_coins-1)
                         return await handler(event, data)
                     
                 else:
                     await downloader.add_user_in_cache(user_id)
                     if count_user_coins != 0:
-                        await event.answer(text='Attention free download limit for today is over, further selection of tracks will charge 1 coin')
+                        await event.answer(text='⚠️⚠️⚠️ Attention free download limit for today is over, further selection of tracks will charge 1 coin ⚠️⚠️⚠️')
 
             return await handler(event, data)

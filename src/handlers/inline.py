@@ -4,11 +4,8 @@ from aiogram.fsm.context import FSMContext
 
 from services.music_api import music_api
 from fsm.states import MusicState
-from middlewares.middlewares import LongOperationMiddleware, LimitTrackDownloadInDayMiddleware
 
 router = Router()
-router.message.middleware(LimitTrackDownloadInDayMiddleware())
-router.message.middleware(LongOperationMiddleware())
 
 @router.inline_query()
 async def process_inline(inline: InlineQuery, state: FSMContext):

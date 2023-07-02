@@ -18,7 +18,7 @@ def buy_coins_kb():
     kb = InlineKeyboardBuilder()
 
     buttons = [
-        InlineKeyboardButton(text='Buy coins', callback_data=CALLBACK['buy_coins']),
+        InlineKeyboardButton(text='💳 Buy coins', callback_data=CALLBACK['buy_coins']),
     ]
 
     kb.row(*buttons)
@@ -30,7 +30,7 @@ def create_payment_accept_kb(label):
     kb = InlineKeyboardBuilder()
 
     buttons = [
-        InlineKeyboardButton(text='Payment verification', callback_data=label)
+        InlineKeyboardButton(text='🔑 Payment verification', callback_data=label)
     ]
 
     kb.row(*buttons)

@@ -1,6 +1,7 @@
 from aiogram.types import Message, URLInputFile
 from aiogram import Router, Bot
 from aiogram.fsm.context import FSMContext
+from middlewares.middlewares import LongOperationMiddleware, LimitTrackDownloadInDayMiddleware
 
 from fsm.states import MusicState, PaymentState
 from services.music_api import music_api
@@ -11,6 +12,8 @@ from config import config
 from datetime import datetime
 
 router = Router()
+router.message.middleware(LimitTrackDownloadInDayMiddleware())
+router.message.middleware(LongOperationMiddleware())
 
 @router.message(lambda msg: msg.text.startswith('search_music_for_id_') and len(msg.text.split('_')[-1]) >= 8 and msg.text.split('_')[-1].isdigit(), # лямбда для более точнго определения
                 # что юзер именно выбрал трек а не просто ввел текст сообщением, так как клик по треку в инлайн режиме возвращает апдейт сообщение 
@@ -25,6 +28,9 @@ async def process_download_misuc(message: Message, state: FSMContext, bot: Bot):
     """
 
     await message.delete()
+
+    await message.answer(text='⌛ Wait for the file to load')
+
     await state.update_data(id=message.text.split('_')[-1])
 
     data = await state.get_data()
@@ -51,4 +57,4 @@ async def process_get_count_coins_for_payment(message: Message, state: FSMContex
 
 @router.message(PaymentState.count)
 async def process_not_valid_count_value(message: Message):
-    await message.answer(text='You entered the number incorrectly\n\nTry again\n\nTo exit the purchase state /start')
+    await message.answer(text='✖ You entered the number incorrectly\n\nTry again\n\n↪️ To exit the purchase state /start')

@@ -39,6 +39,5 @@ if __name__ == "__main__":
     logger.warning('START BOT')
     asyncio.run(main())
 
-# TODO - отефакторить взаимодействие с ботом
-    # TODO - добавить интернализацию
+# TODO - добавить интернализацию
 # TODO - засунуть все в докер

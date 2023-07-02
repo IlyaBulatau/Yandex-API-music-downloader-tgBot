@@ -20,7 +20,7 @@ async def process_get_coins_by_user_tg_id(callback: CallbackQuery):
     Для работы с монетами юзера
     """
     coins = await User.get_coins(tg_id=callback.from_user.id)
-    await callback.message.answer(text=f'You have {coins} coins', reply_markup=buy_coins_kb())
+    await callback.message.answer(text=f'#️⃣ You have {coins} coins', reply_markup=buy_coins_kb())
     await callback.answer()
 
 @router.callback_query(Text(text=CALLBACK['buy_coins']))
@@ -30,7 +30,7 @@ async def start_process_buy_coins(callback: CallbackQuery, state: FSMContext):
     """
     await state.set_state(PaymentState.count)
 
-    await callback.message.answer(text=f'How many coins do you want to buy?\n\nEnter quantity as a positive integer\n\nThe cost of 1 coin is {config.ONE_COIN_QUANTITY}₽')
+    await callback.message.answer(text=f'💵 How many coins do you want to buy?\n\n📊 Enter quantity as a positive integer\n\n❗The cost of 1 coin is {config.ONE_COIN_QUANTITY}₽❗')
     await callback.answer()
 
 @router.callback_query(Text(startswith=CALLBACK['payment_ver']))
@@ -44,9 +44,9 @@ async def process_verefication_payment(callback: CallbackQuery):
         coins_buy = verificate//config.ONE_COIN_QUANTITY # монеты купленные
         coins = int(user_coins)+int(coins_buy) # всего монет для юзера
         await User.update_coins(tg_id=callback.from_user.id, coins=coins)
-        await callback.message.answer(text='You have successfully bought coins!\n\nCongratulations and thanks!')
+        await callback.message.answer(text='✅ You have successfully bought coins!\n\n👏 Congratulations and thanks! 💖')
         logger.critical(f'USER WITH ID {callback.from_user.id} BUY {coins} COINS')
     else:
-        await callback.message.answer(text='Payment not found\nCoins not purchased')
+        await callback.message.answer(text='❌ Payment not found\n🧐 Coins not purchased')
 
     await callback.answer()
