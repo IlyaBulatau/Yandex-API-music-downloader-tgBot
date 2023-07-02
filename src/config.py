@@ -18,7 +18,7 @@ class BaseConfig:
 
     ONE_COIN_QUANTITY = env('ONE_COIN_QUANTITY')
 
-    _status = 'dev'
+    _status = 'prod'
 
 class DevelopmentConfig(BaseConfig):
     
@@ -34,7 +34,18 @@ class DevelopmentConfig(BaseConfig):
     REDIS_HOST = BaseConfig.env('REDIS_HOST_DEV')
 
 class ProductConfig(BaseConfig):
-    ...
+    
+    DB_NAME = BaseConfig.env('DB_NAME_PROD')
+    DB_LOGIN = BaseConfig.env('DB_LOGIN_PROD')
+    DB_PASSWORD = BaseConfig.env('DB_PASSWORD_PROD')
+    DB_HOST = BaseConfig.env('DB_HOST_PROD')
+    DB_URL = f'postgresql+asyncpg://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
+            
+    EMAIL = BaseConfig.env('EMAIL')
+    EMAIL_PASSWORD = BaseConfig.env('EMAIL_PASSWORD')
+
+    REDIS_HOST = BaseConfig.env('REDIS_HOST_PROD')
+
 
 
 config = DevelopmentConfig() if BaseConfig._status == 'dev' else ProductConfig()
