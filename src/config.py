@@ -16,6 +16,8 @@ class BaseConfig:
     YOOMONEY_TOKEN = env('YOOMONEY_TOKEN')
     YOOMONEY_ID = env('YOOMONEY_ID')
 
+    ONE_COIN_QUANTITY = env('ONE_COIN_QUANTITY')
+
     _status = 'dev'
 
 class DevelopmentConfig(BaseConfig):

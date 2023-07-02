@@ -24,3 +24,15 @@ def buy_coins_kb():
     kb.row(*buttons)
 
     return kb.as_markup()
+
+def create_payment_accept_kb(label):
+
+    kb = InlineKeyboardBuilder()
+
+    buttons = [
+        InlineKeyboardButton(text='Payment verification', callback_data=label)
+    ]
+
+    kb.row(*buttons)
+
+    return kb.as_markup()

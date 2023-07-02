@@ -1,4 +1,4 @@
-from yoomoney import Client, Quickpay
+from yoomoney import Client, Quickpay, OperationDetails
 from config import config
 
 
@@ -9,16 +9,18 @@ class Payment:
 
     def get_payments_url(self, sum_, label):
         quickpay = Quickpay(receiver=config.YOOMONEY_ID, 
-                            quickpay_form='coin', 
-                            targets='buy coins', 
-                            paymentType='PC', sum=sum_, 
+                            quickpay_form='button', 
+                            targets='donat', 
+                            paymentType='PC', 
+                            sum=sum_, 
                             successURL=config.BOT_URL, 
                             label=label)
         
         return quickpay.base_url
 
     def is_succssesful_payment(self, label_payment):
-        ...
+        verification = self.client.operation_history(label=label_payment)
+        return verification
 
 
 payment = Payment()

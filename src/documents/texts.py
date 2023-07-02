@@ -12,4 +12,5 @@ Feedback: @Ilbltv'
 CALLBACK = {
     'coins': 'get_coins_by_uset_tg_id',
     'buy_coins': '__buy_coins__',
+    'payment_ver': 'verification_payments_by_label_'
 }

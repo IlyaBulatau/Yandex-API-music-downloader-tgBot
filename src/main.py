@@ -5,6 +5,7 @@ import asyncio
 from handlers.commands import router as router_commands
 from handlers.callback import router as router_callbacks
 from handlers.inline import router as router_inline
+from handlers.message import router as router_message
 
 from documents.menu import set_commands_menu
 from database.connect import db
@@ -22,7 +23,8 @@ async def main():
 
     ds.include_routers(router_commands,
                        router_callbacks,
-                       router_inline)
+                       router_inline,
+                       router_message)
 
     await db.create_db()
     await db.create_models(Base.metadata)
