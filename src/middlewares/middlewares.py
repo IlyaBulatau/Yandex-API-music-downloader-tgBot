@@ -52,6 +52,15 @@ class LongOperationMiddleware(BaseMiddleware):
 
 
 class LimitTrackDownloadInDayMiddleware(BaseMiddleware):
+        """
+        Ограничивает скачивания на 1 трек в день
+
+        Если user_id == админ то пропускает хендлер
+        Если у юзера закончились скачивания  и нету монет то отправляет сообщение о том через сколько времени можно вернуться
+        Если закончились скачивания но есть монеты снимает 1 монету и скачивает трек
+
+        При первом скачивании в день выводит уведомление о том что после скачивания заканчивается лимит и последующее скачивания на сегодня будет взывать монеты если они есть
+        """
 
         async def __call__(sellf,
                 handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
@@ -62,16 +71,19 @@ class LimitTrackDownloadInDayMiddleware(BaseMiddleware):
 
             flag = get_flag(handler=data, name='limit_download')
 
-            if user_id == config.ADMIN_ID:
-                return await handler(event, data)
 
             if flag:
+
+                if int(user_id) == int(config.ADMIN_ID):
+                    return await handler(event, data)
+
                 count_user_coins = await User.get_coins(user_id)
                 is_limit = await downloader.is_a_user_limit(user_id) 
                 if is_limit:
                     
 
                     if count_user_coins == 0:
+                        # подсчет времени оставшегося до конца лимита на скачивания
                         ttl_seconds = await downloader.get_user_ttl_time(user_id)
                         house = ttl_seconds // 3600
                         seconds_remainder = ttl_seconds - (house*3600)

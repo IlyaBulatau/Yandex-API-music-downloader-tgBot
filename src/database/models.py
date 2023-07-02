@@ -47,6 +47,7 @@ class User(Base):
         
     @classmethod    
     async def downgrade_coins(cls, tg_id, **kwargs):
+        # формирую запрос для изменения данных юзера по его тг ИД
         query = update(cls).where(cls.tg_id == tg_id).values(**kwargs).execution_options(synchronize_session='fetch')
         async with session() as s:
             try:
